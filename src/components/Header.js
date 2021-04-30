@@ -1,21 +1,67 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+import {
+  selectUserEmail,
+  selectUserName,
+  selectUserPhoto,
+  setUserLoginDetails,
+} from '../features/user/userSlice';
+import { auth, provider } from '../firebase';
 import NavMenuItem from './NavMenuItem';
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const userName = useSelector(selectUserName);
+  const userEmail = useSelector(selectUserEmail);
+  const userPhoto = useSelector(selectUserPhoto);
+
+  const handleAuth = () => {
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        setUser(result.user);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
+
+  const setUser = (user) => {
+    dispatch(
+      setUserLoginDetails({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+      })
+    );
+  };
+
+  const handleSignOut = () => {
+    auth.signOut();
+  };
+
   return (
     <Nav>
       <Logo>
         <img src='/images/logo.svg' alt='Disney logo' />
       </Logo>
 
-      <NavMenu>
-        <NavMenuItem title='Home' />
-        <NavMenuItem title='Search' />
-        <NavMenuItem title='Watchlist' />
-        <NavMenuItem title='Movies' />
-        <NavMenuItem title='Series' />
-      </NavMenu>
-      <LoginButton>Login</LoginButton>
+      {!userName ? (
+        <LoginButton onClick={handleAuth}>Login</LoginButton>
+      ) : (
+        <>
+          <NavMenu>
+            <NavMenuItem title='Home' />
+            <NavMenuItem title='Search' />
+            <NavMenuItem title='Watchlist' />
+            <NavMenuItem title='Movies' />
+            <NavMenuItem title='Series' />
+          </NavMenu>
+          <UserImage onClick={handleSignOut} src={userPhoto} alt={userName} />
+        </>
+      )}
     </Nav>
   );
 };
@@ -77,6 +123,12 @@ const LoginButton = styled.a`
     color: #000;
     border-color: transparent;
   }
+`;
+
+const UserImage = styled.img`
+  height: 60%;
+  max-height: 60%;
+  border-radius: 24px;
 `;
 
 export default Header;
