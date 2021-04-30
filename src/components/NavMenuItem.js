@@ -8,7 +8,7 @@ const NavMenuItem = ({
   return (
     <MenuItemLink href={link.toLowerCase()}>
       <img src={`/images/${iconFileName}`} alt={title} />
-      <span>{title.toUpperCase()}</span>
+      <span>{title}</span>
     </MenuItemLink>
   );
 };
@@ -19,6 +19,7 @@ const MenuItemLink = styled.a`
   display: flex;
   align-items: center;
   padding: 0 12px;
+  text-transform: uppercase;
 
   img {
     height: 20px;
@@ -49,7 +50,7 @@ const MenuItemLink = styled.a`
       right: 0px;
       transform-origin: left center;
       transform: scaleX(0);
-      transform: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+      transform: all 0.250s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
       visibility: hidden:
       height: auto;
     }
