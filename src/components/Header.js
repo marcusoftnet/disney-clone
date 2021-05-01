@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
@@ -5,6 +6,7 @@ import {
   selectUserEmail,
   selectUserName,
   selectUserPhoto,
+  setSignOutState,
   setUserLoginDetails,
 } from '../features/user/userSlice';
 import { auth, provider } from '../firebase';
@@ -17,15 +19,23 @@ const Header = () => {
   const userEmail = useSelector(selectUserEmail);
   const userPhoto = useSelector(selectUserPhoto);
 
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user);
+        history.push('/home');
+      }
+    });
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userName]);
+
   const handleAuth = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        setUser(result.user);
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+    if (!userName) {
+      handleSignIn();
+    } else if (userName) {
+      handleSignOut();
+    }
   };
 
   const setUser = (user) => {
@@ -38,8 +48,26 @@ const Header = () => {
     );
   };
 
+  const handleSignIn = () => {
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        setUser(result.user);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
   const handleSignOut = () => {
-    auth.signOut();
+    auth
+      .signOut()
+      .then(() => {
+        dispatch(setSignOutState());
+        history.push('/');
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   };
 
   return (
@@ -59,7 +87,12 @@ const Header = () => {
             <NavMenuItem title='Movies' />
             <NavMenuItem title='Series' />
           </NavMenu>
-          <UserImage onClick={handleSignOut} src={userPhoto} alt={userName} />
+          <SignOut>
+            <UserImage src={userPhoto} alt={userName} />
+            <DropDown>
+              <span onClick={handleSignOut}>Sign out</span>
+            </DropDown>
+          </SignOut>
         </>
       )}
     </Nav>
@@ -126,9 +159,45 @@ const LoginButton = styled.a`
 `;
 
 const UserImage = styled.img`
-  height: 60%;
-  max-height: 60%;
-  border-radius: 24px;
+  height: 100%;
+`;
+
+const DropDown = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  background: rgb(19, 19, 19);
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 /50%) 0px 0px 18px 0px;
+  padding: 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  width: 100%;
+  opacity: 0;
+`;
+
+const SignOut = styled.div`
+  position: relative;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+
+  ${UserImage} {
+    border-radius: 48px;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
+  }
 `;
 
 export default Header;
