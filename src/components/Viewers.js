@@ -2,11 +2,27 @@ import styled from 'styled-components';
 import { shuffle } from '../lib/arrayHelpers';
 
 const viewers = [
-  { name: 'Disney', image: 'viewers-disney.png' },
-  { name: 'Pixar', image: 'viewers-pixar.png' },
-  { name: 'Marvel', image: 'viewers-marvel.png' },
-  { name: 'Starwars', image: 'viewers-starwars.png' },
-  { name: 'National Geographic', image: 'viewers-national.png' },
+  {
+    name: 'Disney',
+    image: 'viewers-disney.png',
+    video: '1564674844-disney.mp4',
+  },
+  { name: 'Pixar', image: 'viewers-pixar.png', video: '1564676714-pixar.mp4' },
+  {
+    name: 'Marvel',
+    image: 'viewers-marvel.png',
+    video: '1564676115-marvel.mp4',
+  },
+  {
+    name: 'Starwars',
+    image: 'viewers-starwars.png',
+    video: '1608229455-star-wars.mp4',
+  },
+  {
+    name: 'National Geographic',
+    image: 'viewers-national.png',
+    video: '1564676296-national-geographic.mp4',
+  },
 ];
 
 const Viewers = () => {
@@ -15,7 +31,13 @@ const Viewers = () => {
       {shuffle(viewers).map((viewer) => (
         <Wrap>
           <a href={`/${viewer.name}`}>
-            <img src={`/images/${viewer.image}`} alt={`${viewer.name}`} />
+            <img
+              src={`/images/${viewer.image}`}
+              alt={`${viewer.name} movies`}
+            />
+            <video autoPlay={true} loop={true} playsInline={true}>
+              <source src={`/videos/${viewer.video}`} type='video/mp4' />
+            </video>
           </a>
         </Wrap>
       ))}
@@ -58,6 +80,26 @@ const Wrap = styled.div`
     transition: opacity 0.5s ease-in-out 0s;
     width: 100%;
     z-index: 1;
-    top: 0;
+    top: 0px;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    opacity: 0;
+    z-index: 0;
+  }
+
+  &:hover {
+    box-shadow: rgb(0 0 0 / 80%) 0px 40px 58px -16px,
+      rgb(0 0 0 / 72%) 0px 30px 22px -10px;
+    transform: scale(1.05);
+    border-color: rgba(249, 249, 249, 0.8);
+
+    video {
+      opacity: 1;
+    }
   }
 `;
