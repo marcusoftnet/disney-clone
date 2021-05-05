@@ -8,13 +8,15 @@ const RecommendationRow = ({ selector, title }) => {
     <Container>
       <h4>{title}</h4>
       <Content>
-        {movies?.map((movie) => (
-          <Wrap key={movie.id}>
-            <Link to={`/${movie.id}`}>
-              <img src={movie.cardImg} alt={movies.title} />
-            </Link>
-          </Wrap>
-        ))}
+        {!movies && <div>Loading...</div>}
+        {movies &&
+          movies.map((movie) => (
+            <Wrap key={movie.id}>
+              <Link to={`/${movie.id}`}>
+                <img src={movie.cardImg} alt={movies.title} />
+              </Link>
+            </Wrap>
+          ))}
       </Content>
     </Container>
   );
