@@ -12,7 +12,7 @@ const RecommendationRow = ({ selector, title }) => {
         {movies &&
           movies.map((movie) => (
             <Wrap key={movie.id}>
-              <Link to={`/${movie.id}`}>
+              <Link to={`/detail/${movie.id}`}>
                 <img src={movie.cardImg} alt={movies.title} />
               </Link>
             </Wrap>
