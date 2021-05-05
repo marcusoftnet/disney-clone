@@ -1,13 +1,16 @@
 import styled from 'styled-components';
 import ImageSlider from '../components/ImageSlider';
-import Recommends from './Recommends';
+import RecommendationRow from './RecommendationRow';
 import Viewers from './Viewers';
 const Home = () => {
   return (
     <Container>
       <ImageSlider />
       <Viewers />
-      <Recommends />
+      <RecommendationRow title='Recommended for you' />
+      <RecommendationRow title='New to Disney+' />
+      <RecommendationRow title='Orignals' />
+      <RecommendationRow title='Trending' />
     </Container>
   );
 };
