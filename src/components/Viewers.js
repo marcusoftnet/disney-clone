@@ -28,8 +28,8 @@ const viewers = [
 const Viewers = () => {
   return (
     <Container>
-      {shuffle(viewers).map((viewer) => (
-        <Wrap>
+      {shuffle(viewers).map((viewer, key) => (
+        <Wrap key={key}>
           <a href={`/${viewer.name}`}>
             <img
               src={`/images/${viewer.image}`}

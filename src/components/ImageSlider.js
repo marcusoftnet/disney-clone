@@ -23,8 +23,8 @@ const ImageSlider = () => {
 
   return (
     <Carousel {...settings}>
-      {shuffle(sliders).map((slider) => (
-        <Wrap>
+      {shuffle(sliders).map((slider, key) => (
+        <Wrap key={key}>
           <a href={`/${slider.name}.toLowerCase()`}>
             <img
               src={`/images/slider-${slider.name.toLowerCase()}.jpg`}
