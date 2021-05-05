@@ -17,47 +17,49 @@ import Viewers from './Viewers';
 const Home = () => {
   const dispatch = useDispatch();
   const userName = useSelector(selectUserName);
-  let recommends = [];
-  let newDisneys = [];
-  let originals = [];
-  let trending = [];
+
+  const getMoviesFromSnapshot = (docs) => {
+    const movies = {
+      recommend: [],
+      newDisney: [],
+      original: [],
+      trending: [],
+    };
+
+    docs.forEach((doc) => {
+      const movie = { id: doc.id, ...doc.data() };
+      switch (movie.type) {
+        case 'recommend':
+          movies.recommend = [...movies.recommend, movie];
+          break;
+
+        case 'new':
+          movies.newDisney = [...movies.newDisney, movie];
+          break;
+
+        case 'original':
+          movies.original = [...movies.original, movie];
+          break;
+
+        case 'trending':
+          movies.trending = [...movies.trending, movie];
+          break;
+        default:
+          console.error('Unknown movie type');
+          console.error({ movie });
+      }
+    });
+
+    return movies;
+  };
 
   useEffect(() => {
     db.collection('movies').onSnapshot((snapshot) => {
-      snapshot.docs.map((doc) => {
-        const movie = { id: doc.id, ...doc.data() };
-        switch (movie.type) {
-          case 'recommend':
-            recommends = [...recommends, movie];
-            break;
+      const movies = getMoviesFromSnapshot(snapshot.docs);
 
-          case 'new':
-            newDisneys = [...newDisneys, movie];
-            break;
-
-          case 'original':
-            originals = [...originals, movie];
-            break;
-
-          case 'trending':
-            trending = [...trending, movie];
-            break;
-          default:
-            console.error('Unknown movie type');
-            console.error({ movie });
-        }
-      });
-
-      dispatch(
-        setMovies({
-          recommend: recommends,
-          newDisney: newDisneys,
-          original: originals,
-          trending: trending,
-        })
-      );
+      dispatch(setMovies(movies));
     });
-  }, [userName]);
+  }, [userName, dispatch]);
 
   return (
     <Container>
