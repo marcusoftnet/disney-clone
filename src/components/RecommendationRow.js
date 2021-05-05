@@ -1,31 +1,20 @@
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const RecommendationRow = ({ title }) => {
+const RecommendationRow = ({ selector, title }) => {
+  const movies = useSelector(selector);
   return (
     <Container>
       <h4>{title}</h4>
       <Content>
-        <Wrap>
-          <Link to='/'>
-            <img src='/images/viewers-marvel.png' alt='A text' />
-          </Link>
-        </Wrap>
-        <Wrap>
-          <Link to='/'>
-            <img src='/images/viewers-marvel.png' alt='A text' />
-          </Link>
-        </Wrap>
-        <Wrap>
-          <Link to='/'>
-            <img src='/images/viewers-marvel.png' alt='A text' />
-          </Link>
-        </Wrap>
-        <Wrap>
-          <Link to='/'>
-            <img src='/images/viewers-marvel.png' alt='A text' />
-          </Link>
-        </Wrap>
+        {movies?.map((movie) => (
+          <Wrap key={movie.id}>
+            <Link to={`/${movie.id}`}>
+              <img src={movie.cardImg} alt={movies.title} />
+            </Link>
+          </Wrap>
+        ))}
       </Content>
     </Container>
   );
