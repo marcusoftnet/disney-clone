@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const NavMenuItem = ({
   title,
-  link = `/${title}`,
-  iconFileName = `${title}-icon.svg`,
+  link = `/${title.toLowerCase()}`,
+  iconFileName = `${title.toLowerCase()}-icon.svg`,
 }) => {
   return (
     <MenuItemLink href={link.toLowerCase()}>
